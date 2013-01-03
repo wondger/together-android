@@ -1,17 +1,15 @@
 package com.fedtool.together_android;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.provider.Settings.Secure;
+import android.telephony.TelephonyManager;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +21,7 @@ import android.widget.TextView;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class MainActivity extends Activity {
+	
 	protected static TableLayout joinedTable;
 	protected static TableLayout unjoinedTable;
 	private static final String BASE_URL = "http://106.187.92.33:7777/web/";
@@ -32,13 +31,20 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+        //TelephonyManager tManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+		//String uuid = tManager.getDeviceId();
+        String uuid = "test_yanmu_android";
+        Utils.setUUID(uuid);
+        
+        //Utils.dialog(Utils.uuid, this);
+        
     	joinedTable = (TableLayout) findViewById(R.id.joined_table);
     	unjoinedTable = (TableLayout) findViewById(R.id.unjoined_table);
 
-        getJoinedActivity("id_yanmu");
-        getUnJoinedActivities("id_yanmu");
+        getJoinedActivity(Utils.uuid);
+        getUnJoinedActivities(Utils.uuid);
     }
-
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main, menu);
@@ -119,13 +125,14 @@ public class MainActivity extends Activity {
     	TableRow joinedBodyRow = UI.addTableRow(this);
     	LinearLayout joinedIconsLayout = UI.addLinearLayout(this);
 
-    	Button joinBtn = UI.addButton("加入", this);
+    	Button joinBtn = UI.addButton("查看", this);
     	joinBtn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Utils.dialog(name, context);
+				//Utils.dialog(name, context);
+				joinActivity(name);
 			}
 		});
     	
@@ -151,13 +158,32 @@ public class MainActivity extends Activity {
     }
     
     public void addUnJoinedActivity(JSONArray activities) {
-    	if (activities != null) { 
+    	if (activities != null) {
+			final Context context = this;
+
     		int len = activities.length();
     		for (int i=0; i<len; i++){ 
     			try {
-					JSONObject activity = activities.getJSONObject(i);
+					final JSONObject activity = activities.getJSONObject(i);
 					TableRow row = UI.addTableRow(this);
 					row.addView(UI.addTextView(activity.getString("name"), this));
+					row.addView(UI.addTextView(Utils.date(activity.getString("time")), this));
+					Button joinBtn = UI.addButton("加入", this);
+					
+					joinBtn.setOnClickListener(new View.OnClickListener() {
+						
+						@Override
+						public void onClick(View v) {
+							try {
+								joinActivity(activity.getString("name"));
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					});
+					
+					row.addView(joinBtn);
 					unjoinedTable.addView(row);
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
@@ -165,5 +191,15 @@ public class MainActivity extends Activity {
 				}
     		} 
     	}
+    }
+    
+    public void joinActivity(String name) {
+        // 做一些相应按钮的操作
+     	Intent intent = new Intent(this, JoinActivity.class);
+     	intent.putExtra("name", name);
+     	
+     	startActivity(intent);
+     	
+     	//recreate();
     }
 }

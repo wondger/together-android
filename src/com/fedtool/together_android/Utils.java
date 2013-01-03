@@ -9,8 +9,15 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.telephony.TelephonyManager;
 
 public class Utils {
+	public static String uuid;
+
+	public static void setUUID(String uuid) {
+		Utils.uuid = uuid;
+	}
+	
 	public static void dialog(String message, Context context) {
 		AlertDialog.Builder builder = new Builder(context);
 		builder.setMessage(message);
@@ -47,5 +54,9 @@ public class Utils {
         String dateStr = dateFm.format(date);
         
 		return dateStr;
+	}
+	
+	public static Boolean isEmpty(String str) {
+		return str == null || str.equals("");
 	}
 }
