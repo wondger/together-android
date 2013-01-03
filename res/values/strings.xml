@@ -1,0 +1,10 @@
+<resources>
+
+    <string name="app_name">同行</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">同行</string>
+    
+    <string name="joined_activity_label">已加入活动</string>
+
+</resources>
