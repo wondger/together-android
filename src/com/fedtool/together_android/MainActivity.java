@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class MainActivity extends Activity {
@@ -29,6 +31,10 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
+        Log.i("haha", "xx");
+        Log.i("google play service", "" + GooglePlayServicesUtil.isGooglePlayServicesAvailable(this));
+
+        
         //TelephonyManager tManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 		//String uuid = tManager.getDeviceId();
         String uuid = "test_yanmu_android";
@@ -41,6 +47,7 @@ public class MainActivity extends Activity {
 
         getJoinedActivity(Utils.uuid);
         getUnJoinedActivities(Utils.uuid);
+        
     }
     
     @Override
