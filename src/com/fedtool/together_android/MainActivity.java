@@ -148,7 +148,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				//Utils.dialog(name, context);
-				joinActivity(name);
+				viewActivity(name);
 			}
 		});
     	
@@ -215,7 +215,13 @@ public class MainActivity extends Activity {
      	intent.putExtra("name", name);
      	
      	startActivity(intent);
+    }
+    
+    public void viewActivity(String name) {
+        // 做一些相应按钮的操作
+     	Intent intent = new Intent(this, ViewActivity.class);
+     	intent.putExtra("name", name);
      	
-     	//recreate();
+     	startActivity(intent);
     }
 }
