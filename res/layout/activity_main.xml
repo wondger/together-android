@@ -1,25 +1,110 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg"
     android:orientation="vertical"
-    android:padding="10dip"
     tools:context=".MainActivity" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/title_bg"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/title" />
+
+        <ImageButton
+            android:id="@+id/btn_create"
+            android:layout_width="78dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="-50dp"
+            android:src="@drawable/btn_create"
+            android:onClick="createActivity" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/box_hd"
+        android:orientation="vertical" >
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/joined_title"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:text="已加入活动"
+        android:textColor="#FFFFFF"
+        android:textColorLink="#FFFFFF" />
 
     <TableLayout
         android:id="@+id/joined_table"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/box_bd"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:stretchColumns="0" >
 
     </TableLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/box_ft"
+        android:orientation="vertical" >
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/box_hd"
+        android:orientation="vertical" >
+
+    </LinearLayout>
+    
     <TableLayout
         android:id="@+id/unjoined_table"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/box_bd"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
         android:stretchColumns="0" >
 
     </TableLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/box_ft"
+        android:orientation="vertical" >
+
+    </LinearLayout>
 
 </LinearLayout>

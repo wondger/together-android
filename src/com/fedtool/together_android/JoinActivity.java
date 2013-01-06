@@ -4,12 +4,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.DownloadManager.Request;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
@@ -25,7 +25,7 @@ public class JoinActivity extends Activity{
 	protected TextView tvName = null;
 	protected TextView tvNick = null;
 	protected TextView tvPw = null;
-	protected Button btnJoin = null;
+	protected ImageButton btnJoin = null;
 	
 	protected Boolean new_user = true;
 
@@ -37,7 +37,7 @@ public class JoinActivity extends Activity{
         tvName = (TextView) findViewById(R.id.activity_name);
     	tvNick = (TextView) findViewById(R.id.nick);
     	tvPw = (TextView) findViewById(R.id.password);
-    	btnJoin = (Button) findViewById(R.id.btn_join);
+    	btnJoin = (ImageButton) findViewById(R.id.btn_submit);
         
         Intent intent = getIntent();
         name = intent.getStringExtra("name");
@@ -192,6 +192,12 @@ public class JoinActivity extends Activity{
 	}
 	
 	protected void joinSuc() {
-		Utils.dialog("join success", this);
+		Utils.dialog("加入成功！", this);
+	}
+	
+	public void back() {
+		Intent i = new Intent(this, MainActivity.class);  //your class
+        startActivity(i);
+        //finish();
 	}
 }

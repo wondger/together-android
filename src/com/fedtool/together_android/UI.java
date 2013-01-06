@@ -10,6 +10,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableLayout.LayoutParams;
@@ -23,8 +24,8 @@ public class UI {
     	// create a new TableRow  
         TableRow row = new TableRow(context);
         TableLayout.LayoutParams params = new LayoutParams(TableLayout.LayoutParams.MATCH_PARENT, TableLayout.LayoutParams.WRAP_CONTENT);
-        row.setLayoutParams(params);
         
+        row.setLayoutParams(params);
     	return row;
     }
     
@@ -42,6 +43,17 @@ public class UI {
    	 	//btn.setLayoutParams(params);
     	
    	 	btn.setText(text);
+    	
+    	return btn;
+    }
+    
+    public static ImageButton addImageButton(String text, Context context) {
+    	ImageButton btn = new ImageButton(context);
+   	 	//LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+    	//btn.setGravity(Gravity.CLIP_VERTICAL);
+   	 	//btn.setLayoutParams(params);
+    	
+   	 	//btn.setText(text);
     	
     	return btn;
     }

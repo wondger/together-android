@@ -7,17 +7,19 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class MainActivity extends Activity {
@@ -31,9 +33,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-        Log.i("haha", "xx");
-        Log.i("google play service", "" + GooglePlayServicesUtil.isGooglePlayServicesAvailable(this));
-
         
         //TelephonyManager tManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 		//String uuid = tManager.getDeviceId();
@@ -134,6 +133,9 @@ public class MainActivity extends Activity {
     	TextView joinedName = UI.addTextView(name, this);
     	TextView joinedDate = UI.addTextView(date, this);
     	
+    	joinedName.setTextSize(18);
+		joinedDate.setTextColor(0xff999999);
+
     	joinedHeadRow.addView(joinedName);
     	joinedHeadRow.addView(joinedDate);
     	
@@ -141,7 +143,7 @@ public class MainActivity extends Activity {
     	TableRow joinedBodyRow = UI.addTableRow(this);
     	LinearLayout joinedIconsLayout = UI.addLinearLayout(this);
 
-    	Button joinBtn = UI.addButton("查看", this);
+    	ImageButton joinBtn = UI.addImageButton("查看", this);
     	joinBtn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
@@ -166,8 +168,11 @@ public class MainActivity extends Activity {
     		} 
     	}
     	
+    	joinBtn.setBackgroundResource(R.drawable.btn_view);
     	joinedBodyRow.addView(joinedIconsLayout);
     	joinedBodyRow.addView(joinBtn);
+    	
+    	joinedHeadRow.setPadding(0, 10, 0, 10);
     	
     	joinedTable.addView(joinedHeadRow);
     	joinedTable.addView(joinedBodyRow);
@@ -182,9 +187,21 @@ public class MainActivity extends Activity {
     			try {
 					final JSONObject activity = activities.getJSONObject(i);
 					TableRow row = UI.addTableRow(this);
-					row.addView(UI.addTextView(activity.getString("name"), this));
-					row.addView(UI.addTextView(Utils.date(activity.getString("time")), this));
-					Button joinBtn = UI.addButton("加入", this);
+					row.setPadding(0, 5, 0, 5);
+					
+					TextView name = UI.addTextView(activity.getString("name"), this);
+					name.setTextSize(18);
+					row.addView(name);
+					
+					TextView time = UI.addTextView(Utils.date(activity.getString("time")), this);
+					time.setTextSize(14);
+					time.setTextColor(0xff999999);
+					time.setPadding(0, 0, 5, 0);
+					row.addView(time);
+					
+					ImageButton joinBtn = UI.addImageButton("加入", this);
+					joinBtn.setBackgroundResource(R.drawable.btn_join);
+					row.setGravity(Gravity.CENTER_VERTICAL);
 					
 					joinBtn.setOnClickListener(new View.OnClickListener() {
 						
@@ -213,6 +230,13 @@ public class MainActivity extends Activity {
         // 做一些相应按钮的操作
      	Intent intent = new Intent(this, JoinActivity.class);
      	intent.putExtra("name", name);
+     	
+     	startActivity(intent);
+    }
+    
+    public void createActivity() {
+        // 做一些相应按钮的操作
+     	Intent intent = new Intent(this, CreateActivity.class);
      	
      	startActivity(intent);
     }
