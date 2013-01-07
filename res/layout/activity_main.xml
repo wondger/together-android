@@ -1,9 +1,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/bg"
     android:orientation="vertical"
+    android:scrollbarAlwaysDrawVerticalTrack="true"
+    android:scrollbars="vertical"
     tools:context=".MainActivity" >
 
     <LinearLayout
@@ -23,8 +25,9 @@
             android:layout_width="78dp"
             android:layout_height="50dp"
             android:layout_marginTop="-50dp"
-            android:src="@drawable/btn_create"
-            android:onClick="createActivity" />
+            android:contentDescription="创建"
+            android:onClick="createActivity"
+            android:src="@drawable/btn_create" />
 
     </LinearLayout>
 
@@ -41,7 +44,6 @@
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:background="@drawable/joined_title"

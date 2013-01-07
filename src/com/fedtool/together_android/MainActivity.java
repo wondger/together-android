@@ -7,13 +7,12 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -34,10 +33,27 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         
         
-        //TelephonyManager tManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-		//String uuid = tManager.getDeviceId();
-        String uuid = "test_yanmu_android";
+        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);  
+        String IMEI = tm.getDeviceId();
+        String SSN = tm.getSimSerialNumber();
+        String IMSI = tm.getSubscriberId();
+        
+        String uuid = null;
+        
+        if (!Utils.isEmpty(IMEI)) {
+        	uuid = IMEI;
+        }
+        else if (!Utils.isEmpty(SSN)) {
+        	uuid = SSN;
+        }
+        else if (!Utils.isEmpty(IMSI)) {
+        	uuid = IMSI;
+        }
+        
         Utils.setUUID(uuid);
+        
+        //Utils.dialog(uuid, null);
+        //Utils.dialog(model, null);
         
         //Utils.dialog(Utils.uuid, this);
         
@@ -227,25 +243,32 @@ public class MainActivity extends Activity {
     }
     
     public void joinActivity(String name) {
-        // 做一些相应按钮的操作
-     	Intent intent = new Intent(this, JoinActivity.class);
-     	intent.putExtra("name", name);
-     	
-     	startActivity(intent);
+        JSONObject data = new JSONObject();
+        try {
+			data.put("name", name);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+     	Utils.go(JoinActivity.class, this, data);
     }
     
-    public void createActivity() {
-        // 做一些相应按钮的操作
-     	Intent intent = new Intent(this, CreateActivity.class);
-     	
-     	startActivity(intent);
+    public void createActivity(View v) {
+        Utils.go(AddActivity.class, this, null);
     }
     
     public void viewActivity(String name) {
-        // 做一些相应按钮的操作
-     	Intent intent = new Intent(this, ViewActivity.class);
-     	intent.putExtra("name", name);
-     	
-     	startActivity(intent);
+    	JSONObject data = new JSONObject();
+        try {
+			data.put("uuid", Utils.uuid);
+			data.put("name", name);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+     	Utils.go(ViewActivity.class, this, data);
     }
+    
 }

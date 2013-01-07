@@ -15,29 +15,21 @@
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 	<uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 	
-	<permission
-          android:name="com.example.mapdemo.permission.MAPS_RECEIVE"
-          android:protectionLevel="signature"/>
-    <uses-permission android:name="com.fedtool.together_android.permission.MAPS_RECEIVE"/>
-    
-    <uses-feature
-  		android:glEsVersion="0x00020000"
-  		android:required="true"/>
-
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         
-        <meta-data
+        <!--<meta-data
     		android:name="com.google.android.maps.v2.API_KEY"
-    		android:value="AIzaSyBAmHCcP3T2v5hUWVTAYmyj2KnzsKaQGNw"/>
+    		android:value="AIzaSyBAmHCcP3T2v5hUWVTAYmyj2KnzsKaQGNw"/>-->
     		
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main" >
+            android:label="@string/title_activity_main"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -46,13 +38,16 @@
         </activity>
         
         <activity
-        	android:name=".CreateActivity" />
+        	android:name=".AddActivity"
+        	android:screenOrientation="portrait" />
         
 		<activity
-        	android:name=".JoinActivity" />
+        	android:name=".JoinActivity"
+        	android:screenOrientation="portrait" />
         	
        	<activity
-        	android:name=".ViewActivity" />
+        	android:name=".ViewActivity"
+        	android:screenOrientation="landscape" />
         	
     </application>
 
