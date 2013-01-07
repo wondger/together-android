@@ -28,7 +28,7 @@ import com.loopj.android.http.RequestParams;
 public class JoinActivity extends Activity{
 	protected String name = null;
 	protected String nick = null;
-	protected String avatar = null;
+	protected String avatar = "avatar/" + (int)(Math.random()*10) + ".png";
 	protected String oldNick = null;
 	protected String oldAvatar = null;
 	protected String password = null;
