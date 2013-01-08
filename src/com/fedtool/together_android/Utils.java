@@ -20,7 +20,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class Utils {
 	public static String uuid;
-	public static double ver = 1301080158;
+	public static double ver = R.string.versionCode;
 
 	public static void setUUID(String uuid) {
 		Utils.uuid = uuid;
