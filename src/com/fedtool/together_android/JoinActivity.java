@@ -1,6 +1,9 @@
 package com.fedtool.together_android;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,18 +12,13 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Camera;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.provider.MediaStore.MediaColumns;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
@@ -42,6 +40,8 @@ public class JoinActivity extends Activity{
 	
 	public final int CAPTURE_CODE = 3326;
 	public final int IMAGE_CODE = 3327;
+	
+	public final static String avatarPath = "/sdcard/together/avatar.png";
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,7 +58,7 @@ public class JoinActivity extends Activity{
         name = intent.getStringExtra("name");
 
         tvName.setText(name);
-        formInit(Utils.uuid);
+        formInit();
         
         final Activity self = this;
         
@@ -86,29 +86,32 @@ public class JoinActivity extends Activity{
 		});
 	}
 	
-	protected void formInit(String userId) {
+	protected void formInit() {
 		final Context context = this;
-		Client.get("get-user?id=" + userId, null, new JsonHttpResponseHandler() {
+		Client.get("get-user?id=" + Utils.uuid, null, new JsonHttpResponseHandler() {
 			@Override
             public void onSuccess(JSONObject user) {
                 try {
 
-                    //System.out.println(endSite);
-                    
-                    oldNick = user.getString("nick");
-                    oldAvatar = user.getString("avatar");
-                    
-                    if (Utils.isEmpty(oldNick) || Utils.isEmpty(oldAvatar)) {
-                    	new_user = true;
-                    }
-                    else {
-                    	new_user = false;
+                	if (user != null) {
+                		//System.out.println(endSite);
+                        
+                        oldNick = user.getString("nick");
+                        oldAvatar = user.getString("avatar");
+                        
+                        if (Utils.isEmpty(oldNick) || Utils.isEmpty(oldAvatar)) {
+                        	new_user = true;
+                        }
+                        else {
+                        	new_user = false;
 
-                    	_formInit(nick, avatar);
-                    }
+                        	_formInit(nick, avatar);
+                        }
+                	}
+                    
                     
                 } catch(JSONException e) {
-                    Utils.dialog(e.getMessage(), context);
+                    //Utils.dialog(e.getMessage(), context);
                     //e.printStackTrace();
                 }
                 
@@ -124,6 +127,10 @@ public class JoinActivity extends Activity{
 	
 	protected void _formInit(String nick, String avatar) {
 		tvNick.setText(oldNick);
+		btnAvatar.setImageURI(Uri.parse(avatarPath));
+		btnAvatar.setMaxHeight(50);
+		btnAvatar.setMaxWidth(50);
+
 	}
 	
 	protected void getForm() {
@@ -158,6 +165,40 @@ public class JoinActivity extends Activity{
 		});
 	}
 	
+	protected void updateUser() {
+		final Context context = this;
+
+		RequestParams params = new RequestParams();
+		params.put("id", Utils.uuid);
+		params.put("nick", nick);
+		params.put("avatar", avatar);
+		
+		Client.post("update-user", params, new JsonHttpResponseHandler(){
+			@Override
+            public void onSuccess(JSONObject user) {
+				String nick = null;
+				try {
+					nick = user.getString("nick");
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				if (user == null || Utils.isEmpty(nick)) {
+					Utils.dialog("数据更新失败！", null);
+				}
+				
+				_join();
+            }
+    		
+    		public void onFailure(Throwable e, String response) {
+				Utils.dialog("e数据更新失败！", null);
+				_join();
+
+    		}
+		});
+	}
+	
 	public void join() {
 		getForm();
 				
@@ -176,15 +217,15 @@ public class JoinActivity extends Activity{
 			return;
 		}
 		
-		
 		if (new_user) {
 			//Utils.dialog("adduser", this);
 
 			addUser();
 		}
+		else if (oldNick != nick || oldAvatar != avatar){
+			updateUser();
+		}
 		else {
-			//Utils.dialog("_join", this);
-
 			_join();
 		}
 		
@@ -201,33 +242,51 @@ public class JoinActivity extends Activity{
 		Client.post("join-activity", params, new JsonHttpResponseHandler(){
 			@Override
             public void onSuccess(JSONObject activity) {
-				String activityName = null;
+				String activityName = "";
+				String err = "";
+				String errCode = "incorrect password";
 				try {
-					activityName = activity.getString("name");
-					Utils.dialog(activityName, context);
-					Utils.dialog(name, context);
+					err = activity.getString("error");
+					//Utils.dialog(activityName, context);
+					if (err != null && err.equals(errCode)) {
+						Utils.dialog("密码错误！", context);
+					}
+					else {
+						joinSuc();
+					}
 
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
+					
+					try {
+						activityName = activity.getString("name");
+						
+						if (activityName.equals(name)) {
+							joinSuc();
+						}
+
+					} catch (JSONException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+						
+						Utils.dialog("加入失败！", context);
+					}
+					
 					return;
 				}
 				
-				if (!Utils.isEmpty(activityName)) {
-					joinSuc();
-					return;
-				}
             }
     		
     		public void onFailure(Throwable e, String response) {
-                Utils.dialog(e.getMessage(), context);
+
+                Utils.dialog("e:" + e.getMessage(), context);
     		
     		}
 		});
 	}
 	
 	protected void joinSuc() {
-		Utils.dialog("加入成功！", this);
 
 		viewActivity(name);
 	}
@@ -248,6 +307,8 @@ public class JoinActivity extends Activity{
 		}
         
      	Utils.go(ViewActivity.class, this, data);
+     	
+     	finish();
     }
 	
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -255,22 +316,57 @@ public class JoinActivity extends Activity{
 		super.onActivityResult(requestCode, resultCode, data);
 		ContentResolver resolver = getContentResolver();
 		
-		Utils.dialog("" + resultCode, this);
-		// 拍照
-		if (resultCode != RESULT_OK)
+		
+		
+		if (resultCode != RESULT_OK) {
+			Utils.dialog("获取头像失败！", this);
 			return;
+		}
+		
 		switch (requestCode) {
-		case CAPTURE_CODE: {
-			Log.d("CAPTURE", "1");
-			break;
-		}
+			case CAPTURE_CODE: {
+				Bitmap bmp = (Bitmap)data.getExtras().get("data");
+				
+				bmp = Bitmap.createScaledBitmap(bmp, 50, 50, false);
+				//Utils.dialog(bmp.toString(), this);
+				
+				//btnAvatar.setImageBitmap(bmp);
+				
+				btnAvatar.setImageBitmap(bmp);
+
+				try {
+					FileOutputStream out = new FileOutputStream(avatarPath);
+					bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
+					try {
+						out.flush();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					try {
+						out.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bmp.compress(Bitmap.CompressFormat.PNG , 100, baos);       
+                byte[] bts =baos.toByteArray();
+                
+                avatar = "data:image/png;base64," + Base64.encodeBytes(bts);
+                
+				break;
+			}
 			// 相册
-		case IMAGE_CODE: {
-			Log.d("CAPTURE", "1");
+			case IMAGE_CODE: {
+				Log.d("CAPTURE", "1");
 
-			break;
-		}
-
+				break;
+			}
 		}
 	}
 }

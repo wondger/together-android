@@ -58,9 +58,9 @@ public class AddActivity extends Activity {
 		
 		RequestParams params = new RequestParams();
 		params.put("name", sName);
-		params.put("startSite", sName);
-		params.put("endSite", sName);
-		params.put("password", sName);
+		params.put("startSite", sStart);
+		params.put("endSite", sEnd);
+		params.put("password", sPassword);
 		params.put("ownerId", Utils.uuid);
 		
 		final Context context = this;

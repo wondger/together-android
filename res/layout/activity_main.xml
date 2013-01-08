@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/bg"
     android:orientation="vertical"
+    android:overScrollMode="always"
     android:scrollbarAlwaysDrawVerticalTrack="true"
     android:scrollbars="vertical"
     tools:context=".MainActivity" >
