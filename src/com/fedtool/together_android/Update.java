@@ -36,9 +36,10 @@ public class Update {
 	private static String apk = "";
 	private static String saveName = "";
 
+	
 	private static Activity act = null;
 	private static Handler handler = new Handler();
-
+	
 	public static void checkUpdate(Activity a) {
 		act = a;
 		Client.get("check-update?v=" + verCode, null, new JsonHttpResponseHandler(){
@@ -59,7 +60,6 @@ public class Update {
 					e.printStackTrace();
 					return;
 				}
-
             }
     		
     		public void onFailure(Throwable e, String response) {
@@ -67,7 +67,6 @@ public class Update {
     		}
 		});
 	}
-
 
 	private static void doNewVersionUpdate() {
 		StringBuffer sb = new StringBuffer();
